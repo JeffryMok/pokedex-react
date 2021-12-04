@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ApolloClientProvider from './providers/ApolloClientProvider';
+import Header from './components/Header';
 
 const PokemonList = React.lazy(() => import('./pages/PokemonList'));
 const PokemonDetail = React.lazy(() => import('./pages/PokemonDetail'));
@@ -11,6 +12,7 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <ApolloClientProvider>
+          <Header />
           <Routes>
             <Route path="/" element={<PokemonList />} />
             <Route path="/detail/:name" element={<PokemonDetail />} />
