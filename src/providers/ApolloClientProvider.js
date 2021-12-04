@@ -10,18 +10,8 @@ const ApolloClientProvider = ({ children }) => {
           fields: {
             pokemons: {
               keyArgs: false,
-              merge(existing, incoming, { args: { offset = 0} }) {
-                console.log(existing);
-                console.log(incoming);
-                const merged = existing ? {...existing} : incoming;
-                if (existing) {
-                  let resultTemp = [...merged.results]
-                  for (let i = 0; i <= incoming.results.length; ++i) {
-                    resultTemp[offset+i] = incoming.results[i];
-                  }
-                  merged.results = resultTemp;
-                }
-                return merged;
+              merge(_, incoming) {
+                return incoming;
               }
             }
           }
