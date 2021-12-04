@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { css } from '@emotion/css';
-import { Button, IconButton } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogTitle, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 import InfoAccordion from '../components/InfoAccordion';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const [isOpenDialog, setOpenDialog] = useState(false);
+  const [icon, setIcon] = useState(<></>);
+  const [message, setMessage] = useState('');
 
   const GET_POKEMON_DETAIL = gql`
     query pokemon($name: String!) {
@@ -55,8 +60,48 @@ const PokemonDetail = () => {
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
+  const generateCatchDialog = () => {
+    return (
+      <Dialog open={isOpenDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Catch {name}</DialogTitle>
+        <div className={css`text-align: center; text-size: 16px; font-weight: 600`}>
+          <div>
+            {icon}
+          </div>
+          <div>
+            {message}
+          </div>
+          <div className={css`padding: 8px`}>
+            <Button variant="contained" onClick={handleCatchPokemon}>Catch Again</Button>
+          </div>
+          <div className={css`padding: 8px`}>
+            <Button variant="contained" color="secondary" onClick={() => navigate('/my-list')}>Go To My List</Button>
+          </div>
+        </div>
+      </Dialog>
+    )
+  }
+
+  const handleCatchPokemon = () => {
+    setOpenDialog(true);
+    setIcon(<CircularProgress color="inherit" />)
+    setMessage("Loading...");
+    setTimeout(() => {
+      const catchSuccess = Math.random() > 0.5;
+      console.log(catchSuccess);
+      if (catchSuccess) {
+        setIcon(<DoneIcon color="success" fontSize="large" />);
+        setMessage('Catch Success');
+      } else {
+        setIcon(<CloseIcon color="error" fontSize="large" />);
+        setMessage('Catch Failed');
+      }
+    }, 2000);
+  }
+
   return (
     <div className={css`padding: 8px; font-size: 14px; text-align: center; text-transform: capitalize`}>
+      {isOpenDialog && generateCatchDialog()}
       <div className={css`text-align: left;`}>
         <IconButton onClick={() => navigate(-1)}>
           <ArrowBackIcon fontSize="small" />
@@ -77,7 +122,7 @@ const PokemonDetail = () => {
         <InfoAccordion title="Abilities" keyName="ability" info={abilities} />
         <InfoAccordion title="Moves" keyName="move" info={moves} />
       </div>
-      <div className={css`margin-top: 8px`}>
+      <div className={css`margin-top: 8px`} onClick={handleCatchPokemon}>
         <Button variant="contained">Catch</Button>
       </div>
     </div>
