@@ -2,9 +2,9 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { css } from '@emotion/css';
-import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Button, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import InfoAccordion from '../components/InfoAccordion';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
@@ -55,10 +55,6 @@ const PokemonDetail = () => {
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
-  const normalizeName = (word) => {
-    return word.replace(/-/g, " ");
-  }
-
   return (
     <div className={css`padding: 8px; font-size: 14px; text-align: center; text-transform: capitalize`}>
       <div className={css`text-align: left;`}>
@@ -78,30 +74,8 @@ const PokemonDetail = () => {
         ))}
       </div>
       <div className={css`text-align: left`}>
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <div>Abilities</div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <ul>
-              {abilities.map((elm) => (
-                <li>{normalizeName(elm.ability.name)}</li>
-              ))}
-            </ul>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <div>Moves</div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <ul>
-              {moves.map((elm) => (
-                <li>{normalizeName(elm.move.name)}</li>
-              ))}
-            </ul>
-          </AccordionDetails>
-        </Accordion>
+        <InfoAccordion title="Abilities" keyName="ability" info={abilities} />
+        <InfoAccordion title="Moves" keyName="move" info={moves} />
       </div>
       <div className={css`margin-top: 8px`}>
         <Button variant="contained">Catch</Button>
