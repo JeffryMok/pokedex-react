@@ -12,7 +12,14 @@ export const ContextProvider = ({ children }) => {
 
   const addNewPokemon = (pokemon) => {
     const tempList = [...myPokemonList];
-    tempList.push({ ...pokemon, id: myPokemonList.length + 1 });
+    tempList.push(pokemon);
+    setMyPokemonList(tempList);
+  }
+
+  const removePokemon = (nickname) => {
+    const index = myPokemonList.findIndex((obj) => obj.nickname === nickname);
+    const tempList = [...myPokemonList];
+    tempList.splice(index, 1);
     setMyPokemonList(tempList);
   }
 
@@ -21,6 +28,7 @@ export const ContextProvider = ({ children }) => {
       value={{
         myPokemonList,
         addNewPokemon,
+        removePokemon,
       }}
     >
       {children}

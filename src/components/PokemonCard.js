@@ -1,7 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/css';
+import { Grid } from '@mui/material';
 
-const PokemonCard = ({ id, name, nickname, onClick = null }) => {
+const PokemonCard = ({ id, name, nickname, onClick = null, onRelease = null }) => {
   return (
     <div 
       className={css`
@@ -15,10 +16,19 @@ const PokemonCard = ({ id, name, nickname, onClick = null }) => {
       `}
       onClick={onClick}
     >
-      <div className={css`text-transform: capitalize`}>{`${id}. ${name}`}</div>
-      {nickname && (
-        <div>{nickname}</div>
-      )}
+      <Grid container alignItems="center">
+        <Grid item xs={onRelease ? 10 : 12}>
+          <div className={css`text-transform: capitalize`}>{`${id}. ${name}`}</div>
+          {nickname && (
+            <div>Nickname: {nickname}</div>
+          )}
+        </Grid>
+        {onRelease && (
+          <Grid item xs={2} onClick={onRelease}>
+            <div className={css`color: #e83131`}>Release</div>
+          </Grid>
+        )}
+      </Grid>
     </div>
   );
 };
