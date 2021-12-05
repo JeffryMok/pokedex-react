@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/css';
 import { gql, useQuery } from '@apollo/client';
 import { Grid, Pagination } from '@mui/material';
 import PokemonCard from '../components/PokemonCard';
+import { PokemonContext } from '../providers/ContextProvider';
 
 const PokemonList = () => {
   const navigate = useNavigate();
+  const { myPokemonList } = useContext(PokemonContext);
 
   const GET_POKEMONS = gql`
     query pokemons($limit: Int, $offset: Int) {
@@ -49,7 +51,7 @@ const PokemonList = () => {
           <div>Pokemon List</div>
         </Grid>
         <Grid item>
-          <div>Total Owned: -</div>
+          <div>Total Owned: {myPokemonList?.length || 0}</div>
         </Grid>
       </Grid>
       {results.map((poke) => (
