@@ -43,7 +43,7 @@ const MyPokemonList = () => {
       <Header title="My Pokemon List" />
       {generateReleaseConfirmationDialog()}
       <div className={css`padding: 8px`}>
-        {myPokemonList.map((poke, idx) => (
+        {myPokemonList.length === 0 ? 'Empty! Find the Pokemon you want in Pokemon List, and catch it!' : myPokemonList.map((poke, idx) => (
           <div className={css`margin-bottom: 4px`} key={poke.nickname}>
             <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />
           </div>
