@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ApolloClientProvider from './providers/ApolloClientProvider';
 import { ContextProvider } from './providers/ContextProvider';
 import Header from './components/Header';
+import Loading from './components/Loading';
 
 const PokemonList = React.lazy(() => import('./pages/PokemonList'));
 const PokemonDetail = React.lazy(() => import('./pages/PokemonDetail'));
@@ -11,7 +12,7 @@ const MyPokemonList = React.lazy(() => import('./pages/MyPokemonList'));
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading />}>
         <ApolloClientProvider>
           <ContextProvider>
             <Header />

@@ -38,9 +38,9 @@ const MyPokemonList = () => {
   }
 
   return (
-    <div>
+    <div className={css`padding: 8px`}>
       {generateReleaseConfirmationDialog()}
-      <div>My Pokemon List</div>
+      <div className={css`font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 16px`}>My Pokemon List</div>
       {myPokemonList.map((poke, idx) => (
         <div className={css`margin-bottom: 4px`} key={poke.nickname}>
           <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />

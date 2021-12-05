@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 import { Grid, Pagination } from '@mui/material';
 import PokemonCard from '../components/PokemonCard';
 import { PokemonContext } from '../providers/ContextProvider';
+import Loading from '../components/Loading';
 
 const PokemonList = () => {
   const navigate = useNavigate();
@@ -37,11 +38,11 @@ const PokemonList = () => {
     } = {},
     fetchMore,
   } = useQuery(GET_POKEMONS, { variables: gqlVariables });
-  if (loading) return <div>Loading...</div>
+  if (loading) return <Loading />
   if (error) return <div>Error: {error.message}</div>
 
   const handleChangePage = (_, val) => {
-    fetchMore({ variables: { offset: (val-1)*params.limit }})
+    fetchMore({ variables: { offset: (val-1)*params.limit } })
   }
 
   return (

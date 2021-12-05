@@ -8,6 +8,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoAccordion from '../components/InfoAccordion';
 import { PokemonContext } from '../providers/ContextProvider';
+import Loading from '../components/Loading';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ const PokemonDetail = () => {
       } = {},
     } = {},
   } = useQuery(GET_POKEMON_DETAIL, { variables: gqlVariables });
-  if (loading) return <div>Loading...</div>
+  if (loading) return <Loading />
   if (error) return <div>Error: {error.message}</div>
 
   const generateErrorText = () => {
@@ -77,7 +78,9 @@ const PokemonDetail = () => {
   const generateCatchDialog = () => {
     return (
       <Dialog open={isOpenCatchDialog} onClose={() => setOpenCatchDialog(false)}>
-        <DialogTitle>Catch {name}</DialogTitle>
+        <DialogTitle>
+          <div className={css`text-transform: capitalize`}>Catch {name}</div>
+        </DialogTitle>
         <div className={css`text-align: center; text-size: 16px; font-weight: 600`}>
           <div>
             {icon}
