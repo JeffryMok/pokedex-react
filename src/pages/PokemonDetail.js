@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { css } from '@emotion/css';
-import { Button, CircularProgress, Dialog, DialogTitle, IconButton } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogTitle, IconButton, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoAccordion from '../components/InfoAccordion';
+import { PokemonContext } from '../providers/ContextProvider';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const [isOpenDialog, setOpenDialog] = useState(false);
+  const { addNewPokemon, myPokemonList } = useContext(PokemonContext);
+
   const [icon, setIcon] = useState(<></>);
   const [message, setMessage] = useState('');
+  const [nickname, setNickname] = useState('');
+  
+  const [isError, setError] = useState(false);
+  const [isOpenCatchDialog, setOpenCatchDialog] = useState(false);
+  const [isOpenNicknameDialog, setOpenNicknameDialog] = useState(false);
 
   const GET_POKEMON_DETAIL = gql`
     query pokemon($name: String!) {
@@ -49,6 +56,7 @@ const PokemonDetail = () => {
     error,
     data: {
       pokemon: {
+        id,
         name,
         sprites,
         abilities,
@@ -60,9 +68,15 @@ const PokemonDetail = () => {
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
+  const generateErrorText = () => {
+    if (!nickname) return 'Please fill this field!';
+    else if (!isUniqueNickname()) return 'Nickname must be unique!';
+    return '';
+  }
+
   const generateCatchDialog = () => {
     return (
-      <Dialog open={isOpenDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog open={isOpenCatchDialog} onClose={() => setOpenCatchDialog(false)}>
         <DialogTitle>Catch {name}</DialogTitle>
         <div className={css`text-align: center; text-size: 16px; font-weight: 600`}>
           <div>
@@ -82,16 +96,42 @@ const PokemonDetail = () => {
     )
   }
 
+  const generateNicknameDialog = () => {
+    return (
+      <Dialog open={isOpenNicknameDialog}>
+        <DialogTitle>Give Nickname</DialogTitle>
+        <div className={css`text-align: center; text-size: 16px; font-weight: 600`}>
+          <div>
+            <TextField
+              variant="outlined"
+              label="Nickname"
+              value={nickname}
+              error={isError && (!nickname || !isUniqueNickname())}
+              helperText={isError && generateErrorText()}
+              onChange={(e) => setNickname(e.target.value)}
+              fullWidth
+            />
+          </div>
+          <div className={css`padding: 8px`}>
+            <Button variant="contained" onClick={handleSubmitNickname}>Submit</Button>
+          </div>
+        </div>
+      </Dialog>
+    )
+  }
+
+  const isUniqueNickname = () => !myPokemonList.find((obj) => obj.nickname === nickname);
+
   const handleCatchPokemon = () => {
-    setOpenDialog(true);
+    setOpenCatchDialog(true);
     setIcon(<CircularProgress color="inherit" />)
     setMessage("Loading...");
     setTimeout(() => {
       const catchSuccess = Math.random() > 0.5;
-      console.log(catchSuccess);
       if (catchSuccess) {
         setIcon(<DoneIcon color="success" fontSize="large" />);
         setMessage('Catch Success');
+        setOpenNicknameDialog(true);
       } else {
         setIcon(<CloseIcon color="error" fontSize="large" />);
         setMessage('Catch Failed');
@@ -99,9 +139,25 @@ const PokemonDetail = () => {
     }, 2000);
   }
 
+  const handleSubmitNickname = () => {
+    if (!nickname || !isUniqueNickname()) {
+      setError(true);
+    } else {
+      setError(false);
+      addNewPokemon({
+        pokeId: id,
+        name,
+        nickname,
+      })
+      setOpenNicknameDialog(false);
+      setNickname('');
+    }
+  }
+
   return (
     <div className={css`padding: 8px; font-size: 14px; text-align: center; text-transform: capitalize`}>
-      {isOpenDialog && generateCatchDialog()}
+      {generateCatchDialog()}
+      {generateNicknameDialog()}
       <div className={css`text-align: left;`}>
         <IconButton onClick={() => navigate(-1)}>
           <ArrowBackIcon fontSize="small" />
@@ -115,7 +171,7 @@ const PokemonDetail = () => {
       </div>
       <div className={css`display: flex; justify-content: space-evenly; text-transform: uppercase`}>
         {types.map((elm) => (
-          <div>{elm.type.name}</div>
+          <div key={elm.type.name}>{elm.type.name}</div>
         ))}
       </div>
       <div className={css`text-align: left`}>
