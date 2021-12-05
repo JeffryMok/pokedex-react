@@ -15,7 +15,7 @@ const InfoAccordion = ({ title, info, keyName }) => {
       <AccordionDetails>
         <ul>
           {info.map((elm) => (
-            <li>{normalizeName(elm[keyName]['name'])}</li>
+            <li key={elm[keyName]['name']}>{normalizeName(elm[keyName]['name'])}</li>
           ))}
         </ul>
       </AccordionDetails>
