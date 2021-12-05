@@ -1,22 +1,32 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Grid, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const InfoAccordion = ({ title, info, keyName }) => {
+const InfoAccordion = ({ title, info, keyName, threeColumn }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"), { noSsr: true });
+
   const normalizeName = (word) => {
     return word.replace(/-/g, " ");
   }
 
+  console.log(matches);
+
   return(
-    <Accordion>
+    <Accordion defaultExpanded={matches} sx={{ textAlign: 'left' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <div>{title}</div>
       </AccordionSummary>
       <AccordionDetails>
         <ul>
-          {info.map((elm) => (
-            <li key={elm[keyName]['name']}>{normalizeName(elm[keyName]['name'])}</li>
-          ))}
+          <Grid container>
+            {info.map((elm) => (
+              <Grid item xs={6} lg={threeColumn ? 4 : 6}>
+                <li key={elm[keyName]['name']}>{normalizeName(elm[keyName]['name'])}</li>
+              </Grid>
+            ))}
+          </Grid>
         </ul>
       </AccordionDetails>
     </Accordion>

@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { css } from '@emotion/css';
-import { Button, CircularProgress, Dialog, DialogTitle, TextField } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogTitle, Grid, TextField, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import Header from '../components/Header';
@@ -12,8 +13,11 @@ import Loading from '../components/Loading';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const params = useParams();
   const { addNewPokemon, myPokemonList } = useContext(PokemonContext);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"), { noSsr: true });
 
   const [icon, setIcon] = useState(<></>);
   const [message, setMessage] = useState('');
@@ -77,23 +81,25 @@ const PokemonDetail = () => {
 
   const generateCatchDialog = () => {
     return (
-      <Dialog open={isOpenCatchDialog} onClose={() => setOpenCatchDialog(false)}>
+      <Dialog open={isOpenCatchDialog} onClose={() => setOpenCatchDialog(false)} fullWidth>
         <DialogTitle>
-          <div className={css`text-transform: capitalize; text-align: center`}>Catch {name}</div>
+          <div className={css`text-transform: capitalize; text-align: center; font-size: 32px; font-weight: 600`}>Catch {name}</div>
         </DialogTitle>
-        <div className={css`text-align: center; font-size: 16px; font-weight: 600; padding: 16px`}>
+        <div className={css`text-align: center; font-size: 24px; font-weight: 500; padding: 16px`}>
           <div>
             {icon}
           </div>
           <div>
             {message}
           </div>
-          <div className={css`padding: 8px; margin-top: 12px`}>
-            <Button variant="contained" onClick={handleCatchPokemon}>Catch Again</Button>
-          </div>
-          <div className={css`padding: 8px`}>
-            <Button variant="contained" color="secondary" onClick={() => navigate('/my-list')}>Go To My List</Button>
-          </div>
+          <Grid container sx={{ marginTop: '12px' }}>
+            <Grid item sx={{ padding: '8px' }} xs={12} lg={6}>
+              <Button variant="contained" onClick={handleCatchPokemon} fullWidth>Catch Again</Button>
+            </Grid>
+            <Grid item sx={{ padding: '8px' }} xs={12} lg={6}>
+              <Button variant="contained" color="secondary" fullWidth onClick={() => navigate('/my-list')}>Go To My List</Button>
+            </Grid>
+          </Grid>
         </div>
       </Dialog>
     )
@@ -113,6 +119,7 @@ const PokemonDetail = () => {
               helperText={isError && generateErrorText()}
               onChange={(e) => setNickname(e.target.value)}
               fullWidth
+              autoFocus
             />
           </div>
           <div className={css`padding: 8px`}>
@@ -132,11 +139,11 @@ const PokemonDetail = () => {
     setTimeout(() => {
       const catchSuccess = Math.random() > 0.5;
       if (catchSuccess) {
-        setIcon(<DoneIcon color="success" fontSize="large" />);
+        setIcon(<DoneIcon color="success" fontSize="large" sx={{ width: '60px', height: '60px' }} />);
         setMessage('Catch Success');
         setOpenNicknameDialog(true);
       } else {
-        setIcon(<CloseIcon color="error" fontSize="large" />);
+        setIcon(<CloseIcon color="error" fontSize="large" sx={{ width: '60px', height: '60px' }} />);
         setMessage('Catch Failed');
       }
     }, 2000);
@@ -162,23 +169,29 @@ const PokemonDetail = () => {
       <Header title="Pokemon Detail" />
       {generateCatchDialog()}
       {generateNicknameDialog()}
-      <div className={css`padding: 8px; font-size: 14px; text-align: center; text-transform: capitalize`}>
-        <div className={css`font-size: 24px; font-weight: 600`}>{name}</div>
-        <div>
-          <img src={sprites?.front_default} alt={name} width="96px" height="96px" />
-        </div>
-        <div className={css`display: flex; justify-content: space-evenly; text-transform: uppercase`}>
-          {types.map((elm) => (
-            <div key={elm.type.name}>{elm.type.name}</div>
-          ))}
-        </div>
-        <div className={css`text-align: left`}>
-          <InfoAccordion title="Abilities" keyName="ability" info={abilities} />
-          <InfoAccordion title="Moves" keyName="move" info={moves} />
-        </div>
-        <div className={css`margin-top: 8px`} onClick={handleCatchPokemon}>
-          <Button variant="contained">Catch</Button>
-        </div>
+      <div className={css`padding: 16px; font-size: 14px; text-align: center; text-transform: capitalize`}>
+        <Grid container>
+          <Grid sx={{ p: '0px 8px' }} xs={12} md={4}>
+            <div className={css`font-size: 36px; font-weight: 600`}>{name}</div>
+            <div>
+              <img src={state?.artwork || sprites?.front_default} alt={name} width={matches ? '450px' : '196px'} height={matches ? '450px' : '196px'} />
+            </div>
+            <div className={css`display: flex; justify-content: space-evenly; text-transform: uppercase; font-size: 24px`}>
+              {types.map((elm) => (
+                <div key={elm.type.name}>{elm.type.name}</div>
+              ))}
+            </div>
+            <div className={css`margin-top: 8px`} onClick={handleCatchPokemon}>
+              <Button variant="contained" size="large">Catch</Button>
+            </div>
+          </Grid>
+          <Grid sx={{ p: '4px 8px' }} xs={12} md={4}>
+            <InfoAccordion title="Abilities" keyName="ability" info={abilities} />
+          </Grid>
+          <Grid sx={{ p: '4px 8px' }} xs={12} md={4}>
+            <InfoAccordion title="Moves" keyName="move" info={moves} threeColumn />
+          </Grid>
+        </Grid>
       </div>
     </div>
   )

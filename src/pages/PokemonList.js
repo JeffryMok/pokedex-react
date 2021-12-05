@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/css';
 import { gql, useQuery } from '@apollo/client';
-import { Pagination } from '@mui/material';
+import { Grid, Pagination } from '@mui/material';
 import { PokemonContext } from '../providers/ContextProvider';
 import PokemonCard from '../components/PokemonCard';
 import Header from '../components/Header';
@@ -11,6 +11,7 @@ import Loading from '../components/Loading';
 const PokemonList = () => {
   const navigate = useNavigate();
   const { myPokemonList } = useContext(PokemonContext);
+  const limit = 12;
 
   const GET_POKEMONS = gql`
     query pokemons($limit: Int, $offset: Int) {
@@ -20,12 +21,13 @@ const PokemonList = () => {
         results {
           id
           name
+          artwork
         }
       }
     }
   `;
 
-  const gqlVariables = { limit: 10, offset: 0 };
+  const gqlVariables = { limit, offset: 0 };
 
   const {
     loading,
@@ -50,12 +52,14 @@ const PokemonList = () => {
     <div>
       <Header title="Pokemon List" />
       <div className={css`padding: 8px`}>
-        <div className={css`text-align: center; font-size: 18px; font-weight: 500`}>Total Owned: {myPokemonList?.length || 0}</div>
-        {results.map((poke) => (
-          <div className={css`margin-bottom: 4px`} key={poke.id}>
-            <PokemonCard id={poke.id} name={poke.name} onClick={() => navigate(`/detail/${poke.name}`)} />
-          </div>
-        ))}
+        <div className={css`text-align: center; font-size: 18px; font-weight: 500; margin-bottom: 16px`}>Total Owned: {myPokemonList?.length || 0}</div>
+        <Grid container>
+          {results.map((poke) => (
+            <Grid sx={{ mb: '8px', p: '0px 8px' }} key={poke.id} xs={12} sm={6} md={4} lg={3}>
+              <PokemonCard id={poke.id} name={poke.name} onClick={() => navigate(`/detail/${poke.name}`, { state: poke })} />
+            </Grid>
+          ))}
+        </Grid>
         <div className={css`margin-top: 12px; display: flex; justify-content: center`}>
           <Pagination count={Math.ceil(count/params.limit)} page={(params.offset + params.limit)/params.limit} onChange={handleChangePage} color="primary" />
         </div>

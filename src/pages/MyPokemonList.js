@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/css';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@mui/material';
 import { PokemonContext } from '../providers/ContextProvider';
 import PokemonCard from '../components/PokemonCard';
 import Header from '../components/Header';
@@ -43,11 +43,13 @@ const MyPokemonList = () => {
       <Header title="My Pokemon List" />
       {generateReleaseConfirmationDialog()}
       <div className={css`padding: 8px`}>
-        {myPokemonList.length === 0 ? 'Empty! Find the Pokemon you want in Pokemon List, and catch it!' : myPokemonList.map((poke, idx) => (
-          <div className={css`margin-bottom: 4px`} key={poke.nickname}>
-            <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />
-          </div>
-        ))}
+        <Grid container>
+          {myPokemonList.length === 0 ? 'Empty! Find the Pokemon you want in Pokemon List, and catch it!' : myPokemonList.map((poke, idx) => (
+            <Grid sx={{ mb: '8px', p: '0px 8px' }} xs={12} sm={6} md={4} lg={3} key={poke.nickname}>
+              <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />
+            </Grid>
+          ))}
+        </Grid>
       </div>
     </div>
   )

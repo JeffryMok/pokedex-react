@@ -12,19 +12,19 @@ const PokemonCard = ({ id, name, nickname, onClick = null, onRelease = null }) =
         background-color: #fbf7f8;
         border: 2px solid #e83131;
         border-radius: 10px;
-        cursor: pointer;
+        cursor: ${onClick ? 'pointer' : 'auto'};
       `}
       onClick={onClick}
     >
       <Grid container alignItems="center">
-        <Grid item xs={onRelease ? 10 : 12}>
+        <Grid item xs={onRelease ? 9 : 12}>
           <div className={css`text-transform: capitalize`}>{`${id}. ${name}`}</div>
           {nickname && (
             <div>Nickname: {nickname}</div>
           )}
         </Grid>
         {onRelease && (
-          <Grid item xs={2} onClick={onRelease}>
+          <Grid item xs={3} onClick={onRelease} sx={{ cursor: 'pointer' }}>
             <div className={css`color: #e83131`}>Release</div>
           </Grid>
         )}
