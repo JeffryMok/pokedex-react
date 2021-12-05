@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import InfoAccordion from '../components/InfoAccordion';
 import { PokemonContext } from '../providers/ContextProvider';
 import Loading from '../components/Loading';
+import TYPE_COLORS from '../constants/typeColors';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
@@ -176,17 +177,28 @@ const PokemonDetail = () => {
             <div>
               <img src={state?.artwork || sprites?.front_default} alt={name} width={matches ? '450px' : '196px'} height={matches ? '450px' : '196px'} />
             </div>
-            <div className={css`display: flex; justify-content: space-evenly; text-transform: uppercase; font-size: 24px`}>
+            <div className={css`display: flex; justify-content: space-evenly; text-transform: uppercase; font-size: 20px`}>
               {types.map((elm) => (
-                <div key={elm.type.name}>{elm.type.name}</div>
+                <div
+                  key={elm.type.name}
+                  className={css`
+                    color: white;
+                    background-color: ${TYPE_COLORS[elm.type.name.toUpperCase()]};
+                    padding: 8px;
+                    border-radius: 20px;
+                    font-weight: 600;
+                  `}
+                >
+                  {elm.type.name}
+                </div>
               ))}
             </div>
-            <div className={css`margin-top: 8px`} onClick={handleCatchPokemon}>
+            <div className={css`margin: 24px 0px`} onClick={handleCatchPokemon}>
               <Button variant="contained" size="large">Catch</Button>
             </div>
           </Grid>
           <Grid sx={{ p: '4px 8px' }} xs={12} md={4}>
-            <InfoAccordion title="Abilities" keyName="ability" info={abilities} />
+            <InfoAccordion title="Abilities" keyName="ability" info={abilities} threeColumn={abilities.length === 3} />
           </Grid>
           <Grid sx={{ p: '4px 8px' }} xs={12} md={4}>
             <InfoAccordion title="Moves" keyName="move" info={moves} threeColumn />
