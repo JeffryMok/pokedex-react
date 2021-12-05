@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/css';
-import PokemonCard from '../components/PokemonCard';
-import { PokemonContext } from '../providers/ContextProvider';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { PokemonContext } from '../providers/ContextProvider';
+import PokemonCard from '../components/PokemonCard';
+import Header from '../components/Header';
 
 const MyPokemonList = () => {
   const { myPokemonList, removePokemon } = useContext(PokemonContext);
@@ -38,14 +39,16 @@ const MyPokemonList = () => {
   }
 
   return (
-    <div className={css`padding: 8px`}>
+    <div>
+      <Header title="My Pokemon List" />
       {generateReleaseConfirmationDialog()}
-      <div className={css`font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 16px`}>My Pokemon List</div>
-      {myPokemonList.map((poke, idx) => (
-        <div className={css`margin-bottom: 4px`} key={poke.nickname}>
-          <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />
-        </div>
-      ))}
+      <div className={css`padding: 8px`}>
+        {myPokemonList.map((poke, idx) => (
+          <div className={css`margin-bottom: 4px`} key={poke.nickname}>
+            <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
