@@ -18,7 +18,7 @@ const PokemonCard = ({ id, name, nickname, onClick = null, onRelease = null }) =
     >
       <Grid container alignItems="center">
         <Grid item xs={onRelease ? 9 : 12}>
-          <div className={css`text-transform: capitalize`}>{`${id}. ${name}`}</div>
+          <div className={css`text-transform: capitalize`} data-testid="test-name">{`${id}. ${name}`}</div>
           {nickname && (
             <div>Nickname: {nickname}</div>
           )}

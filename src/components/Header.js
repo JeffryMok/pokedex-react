@@ -44,7 +44,7 @@ const Header = ({ title }) => {
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="menu-icon"
             edge="start"
             onClick={handleDrawerToggle}
           >
@@ -56,6 +56,7 @@ const Header = ({ title }) => {
         </Toolbar>
         <nav>
           <Drawer
+            aria-label="drawer"
             variant="temporary"
             open={isopenDrawer}
             onClose={handleDrawerToggle}

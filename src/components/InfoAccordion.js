@@ -11,8 +11,6 @@ const InfoAccordion = ({ title, info, keyName, threeColumn }) => {
     return word.replace(/-/g, " ");
   }
 
-  console.log(matches);
-
   return(
     <Accordion defaultExpanded={matches} sx={{ textAlign: 'left' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
