@@ -45,7 +45,7 @@ const MyPokemonList = () => {
       <div className={css`padding: 8px`}>
         <Grid container>
           {myPokemonList.length === 0 ? 'Empty! Find the Pokemon you want in Pokemon List, and catch it!' : myPokemonList.map((poke, idx) => (
-            <Grid sx={{ mb: '8px', p: '0px 8px' }} xs={12} sm={6} md={4} lg={3} key={poke.nickname}>
+            <Grid item sx={{ mb: '8px', p: '0px 8px' }} xs={12} sm={6} md={4} lg={3} key={poke.nickname}>
               <PokemonCard id={idx+1} name={poke.name} nickname={poke.nickname} onRelease={() => handleOpenReleaseDialog(poke.nickname)} />
             </Grid>
           ))}

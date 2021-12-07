@@ -150,10 +150,10 @@ const PokemonDetail = () => {
       {generateNicknameDialog()}
       <div className={css`padding: 16px; font-size: 14px; text-align: center; text-transform: capitalize`}>
         <Grid container>
-          <Grid sx={{ p: '0px 8px' }} xs={12} md={4}>
+          <Grid item sx={{ p: '0px 8px' }} xs={12} md={4}>
             <div className={css`font-size: 36px; font-weight: 600`}>{name}</div>
             <div>
-              <img src={state?.artwork || sprites?.front_default} alt={name} width={matches ? '450px' : '196px'} height={matches ? '450px' : '196px'} />
+              <img src={state?.artwork || sprites?.front_default} alt={name} width={matches ? '100%' : '196px'} height={matches ? '100%' : '196px'} />
             </div>
             <div className={css`display: flex; justify-content: space-evenly; text-transform: uppercase; font-size: 20px`}>
               {types.map((elm) => (
@@ -175,10 +175,10 @@ const PokemonDetail = () => {
               <Button variant="contained" size="large">Catch</Button>
             </div>
           </Grid>
-          <Grid sx={{ p: '4px 8px' }} xs={12} md={4}>
+          <Grid item sx={{ p: '4px 8px' }} xs={12} md={4}>
             <InfoAccordion title="Abilities" keyName="ability" info={abilities} threeColumn={abilities.length === 3} />
           </Grid>
-          <Grid sx={{ p: '4px 8px' }} xs={12} md={4}>
+          <Grid item sx={{ p: '4px 8px' }} xs={12} md={4}>
             <InfoAccordion title="Moves" keyName="move" info={moves} threeColumn />
           </Grid>
         </Grid>
