@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { css } from '@emotion/css';
 import { Button, CircularProgress, Dialog, DialogTitle, Grid, TextField, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -11,6 +11,7 @@ import InfoAccordion from '../components/InfoAccordion';
 import { PokemonContext } from '../providers/ContextProvider';
 import Loading from '../components/Loading';
 import TYPE_COLORS from '../constants/typeColors';
+import { GET_POKEMON_DETAIL } from '../constants/graphqlQueries';
 
 const PokemonDetail = () => {
   const navigate = useNavigate();
@@ -27,33 +28,6 @@ const PokemonDetail = () => {
   const [isError, setError] = useState(false);
   const [isOpenCatchDialog, setOpenCatchDialog] = useState(false);
   const [isOpenNicknameDialog, setOpenNicknameDialog] = useState(false);
-
-  const GET_POKEMON_DETAIL = gql`
-    query pokemon($name: String!) {
-      pokemon(name: $name) {
-        id
-        name
-        sprites {
-          front_default
-        }
-        abilities {
-          ability {
-            name
-          }
-        }
-        moves {
-          move {
-            name
-          }
-        }
-        types {
-          type {
-            name
-          }
-        }
-      }
-    }
-  `;
 
   const gqlVariables = { name: params.name };
 

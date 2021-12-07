@@ -1,31 +1,18 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/css';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Grid, Pagination } from '@mui/material';
 import { PokemonContext } from '../providers/ContextProvider';
 import PokemonCard from '../components/PokemonCard';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
+import { GET_POKEMONS } from '../constants/graphqlQueries';
 
 const PokemonList = () => {
   const navigate = useNavigate();
   const { myPokemonList } = useContext(PokemonContext);
   const limit = 12;
-
-  const GET_POKEMONS = gql`
-    query pokemons($limit: Int, $offset: Int) {
-      pokemons(limit: $limit, offset: $offset) {
-        count
-        params
-        results {
-          id
-          name
-          artwork
-        }
-      }
-    }
-  `;
 
   const gqlVariables = { limit, offset: 0 };
 
@@ -55,7 +42,7 @@ const PokemonList = () => {
         <div className={css`text-align: center; font-size: 18px; font-weight: 500; margin-bottom: 16px`}>Total Owned: {myPokemonList?.length || 0}</div>
         <Grid container>
           {results.map((poke) => (
-            <Grid sx={{ mb: '8px', p: '0px 8px' }} key={poke.id} xs={12} sm={6} md={4} lg={3}>
+            <Grid item sx={{ mb: '8px', p: '0px 8px' }} key={poke.id} xs={12} sm={6} md={4} lg={3}>
               <PokemonCard id={poke.id} name={poke.name} onClick={() => navigate(`/detail/${poke.name}`, { state: poke })} />
             </Grid>
           ))}
