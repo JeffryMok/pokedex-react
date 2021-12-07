@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { css } from '@emotion/css';
 import { Button, CircularProgress, Dialog, DialogTitle, Grid, TextField, useMediaQuery } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useTheme } from '@mui/material/styles';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
@@ -28,6 +29,7 @@ const PokemonDetail = () => {
   const [isError, setError] = useState(false);
   const [isOpenCatchDialog, setOpenCatchDialog] = useState(false);
   const [isOpenNicknameDialog, setOpenNicknameDialog] = useState(false);
+  const [isLoadingButton, setLoadingButton] = useState(false);
 
   const gqlVariables = { name: params.name };
 
@@ -69,10 +71,10 @@ const PokemonDetail = () => {
           </div>
           <Grid container sx={{ marginTop: '12px' }}>
             <Grid item sx={{ padding: '8px' }} xs={12} lg={6}>
-              <Button variant="contained" onClick={handleCatchPokemon} fullWidth>Catch Again</Button>
+              <LoadingButton variant="contained" onClick={handleCatchPokemon} fullWidth loading={isLoadingButton} loadingIndicator="Catching...">Catch Again</LoadingButton>
             </Grid>
             <Grid item sx={{ padding: '8px' }} xs={12} lg={6}>
-              <Button variant="contained" color="secondary" fullWidth onClick={() => navigate('/my-list')}>Go To My List</Button>
+              <LoadingButton variant="contained" color="secondary" fullWidth onClick={() => navigate('/my-list')} loading={isLoadingButton} loadingIndicator="Catching...">Go To My List</LoadingButton>
             </Grid>
           </Grid>
         </div>
@@ -111,6 +113,7 @@ const PokemonDetail = () => {
     setOpenCatchDialog(true);
     setIcon(<CircularProgress color="inherit" />)
     setMessage("Loading...");
+    setLoadingButton(true);
     setTimeout(() => {
       const catchSuccess = Math.random() > 0.5;
       if (catchSuccess) {
@@ -121,6 +124,7 @@ const PokemonDetail = () => {
         setIcon(<CloseIcon color="error" fontSize="large" sx={{ width: '60px', height: '60px' }} />);
         setMessage('Catch Failed');
       }
+      setLoadingButton(false);
     }, 2000);
   }
 
