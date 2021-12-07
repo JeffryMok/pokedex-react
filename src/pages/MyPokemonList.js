@@ -6,7 +6,7 @@ import PokemonCard from '../components/PokemonCard';
 import Header from '../components/Header';
 
 const MyPokemonList = () => {
-  const { myPokemonList, removePokemon } = useContext(PokemonContext);
+  const { myPokemonList = [], removePokemon } = useContext(PokemonContext);
   
   const [isOpenReleaseDialog, setOpenReleaseDialog] = useState(false);
   const [pokemonNickname, setPokemonNickname] = useState('');
