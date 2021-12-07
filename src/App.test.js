@@ -21,13 +21,13 @@ test('redirect and load pages', async () => {
       request: {
         query: GET_POKEMONS,
         variables: {
-          limit: 12,
+          limit: 8,
           offset: 0,
         },
       },
       result: {
         data: {
-          pokemons: { count: 1, params: { limit: 12, offset: 0 }, results: [{ id: 25, name: 'pikachu', artwork: 'artwork' }] },
+          pokemons: { count: 1, params: { limit: 8, offset: 0 }, results: [{ id: 25, name: 'pikachu', artwork: 'artwork' }] },
         },
       },
     },

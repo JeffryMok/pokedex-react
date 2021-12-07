@@ -2,17 +2,23 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/css';
 import { useQuery } from '@apollo/client';
-import { Grid, Pagination } from '@mui/material';
+import { Grid, Pagination, useMediaQuery } from '@mui/material';
 import { PokemonContext } from '../providers/ContextProvider';
 import PokemonCard from '../components/PokemonCard';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import { GET_POKEMONS } from '../constants/graphqlQueries';
+import { useTheme } from '@mui/system';
 
 const PokemonList = () => {
   const navigate = useNavigate();
   const { myPokemonList } = useContext(PokemonContext);
-  const limit = 12;
+  const theme = useTheme();
+  const smMatches = useMediaQuery(theme.breakpoints.up("sm"), { noSsr: true });
+  const lgMatches = useMediaQuery(theme.breakpoints.up("lg"), { noSsr: true });
+  let limit = 8;
+  if (lgMatches) limit = 28;
+  else if (smMatches) limit = 16;
 
   const gqlVariables = { limit, offset: 0 };
 
@@ -42,7 +48,7 @@ const PokemonList = () => {
         <div className={css`text-align: center; font-size: 18px; font-weight: 500; margin-bottom: 16px`}>Total Owned: {myPokemonList?.length || 0}</div>
         <Grid container>
           {results.map((poke) => (
-            <Grid item sx={{ mb: '8px', p: '0px 8px' }} key={poke.id} xs={12} sm={6} md={4} lg={3}>
+            <Grid item sx={{ mb: '8px', p: '0px 8px' }} key={poke.id} xs={12} sm={6} lg={3}>
               <PokemonCard id={poke.id} name={poke.name} onClick={() => navigate(`/detail/${poke.name}`, { state: poke })} />
             </Grid>
           ))}
